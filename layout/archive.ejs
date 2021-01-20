@@ -32,22 +32,37 @@
             years[year].push(post);
         });
     %>
+    <!-- Split post by category -->
+    <%
+        var categories = {};
+        Object.keys(years).reverse().forEach(function(year){
+          years[year].map(function(post){
+            post.categories.forEach(function(category, i) {
+              if(i===1) {
+                if(categories[category.name]===undefined){
+                  categories[category.name] = [];
+                }
+                categories[category.name].push(post);
+              }
+            })
+          })
+        })
+    %>
   <% } %>
 
-  <% Object.keys(years).reverse().forEach(function(year){  %>
-      <div class="years">
-          <h2><%= year %></h2>
-          <ul class="archive-list-item">
-          <% years[year].map(function(post){  %>
-              <li>
-                <span><%= post.date.format('YYYY-MM-DD') %></span>
-                <a href="<%- config.root %><%- post.path %>">
-                  <%- post.title || "Untitled" %>
-                </a>
-              </li>
-          <% }) %>
-          </ul>
-      </div>
+  <% Object.keys(categories).forEach(function(category){  %>
+    <div class="category">
+        <h2><%= category %></h2>
+        <ul class="archive-list-item">
+        <% categories[category].map(function(post){  %>
+            <li>
+              <a href="<%- config.root %><%- post.path %>">
+                <%- post.title || "Untitled" %>
+              </a>
+            </li>
+        <% }) %>
+        </ul>
+    </div>
   <% }) %>
 
   <% if(!is_current('archives') && page.total > 1) {%>
