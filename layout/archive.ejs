@@ -37,6 +37,12 @@
         var categories = {};
         Object.keys(years).reverse().forEach(function(year){
           years[year].map(function(post){
+            if (post.categories.length===1) {
+              if(categories["その他"]===undefined){
+                categories["その他"] = [];
+              }
+              categories["その他"].push(post);
+            }
             post.categories.forEach(function(category, i) {
               if(i===1) {
                 if(categories[category.name]===undefined){
